@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "jest --coverage --coverageDirectory=__tests__/coverage"
+    "test": "jest --coverage --coverageDirectory=__tests__/coverage --detectOpenHandles  --runInBand"
   },
   "dependencies": {},
   "devDependencies": {
