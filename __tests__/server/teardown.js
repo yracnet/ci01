@@ -8,6 +8,7 @@ export default function stopServer() {
       console.log("[STOP] Stopping server...");
       serverProcess.kill("SIGINT");
       serverProcess.on("exit", (code, signal) => {
+        process.exit(0);
         resolve();
         process.exit(0);
       });
