@@ -1,9 +1,10 @@
 const request = require("supertest");
 const crossSpawn = require("cross-spawn");
-const { spawn } = require("child_process");
 const path = require("path");
+
 const rootDir = path.resolve(__dirname, "../");
 console.log("ROOT:", rootDir);
+
 describe("API Tests", () => {
   let serverProcess;
 
@@ -12,6 +13,7 @@ describe("API Tests", () => {
       cwd: rootDir,
       stdio: "pipe",
     });
+
     let stdout = "";
     serverProcess.stdout.on("data", (data) => {
       stdout += data.toString();
@@ -19,12 +21,17 @@ describe("API Tests", () => {
         done();
       }
     });
+
+    serverProcess.on("error", (err) => {
+      console.error("Failed to start server:", err);
+      done.fail(err);
+    });
   });
 
   afterAll((done) => {
-    serverProcess.kill();
-    serverProcess.on("exit", () => {
-      console.log("Server process terminated");
+    serverProcess.kill("SIGINT");
+
+    serverProcess.on("exit", (code) => {
       done();
     });
   });
@@ -33,7 +40,8 @@ describe("API Tests", () => {
     const response = await request("http://localhost:5173")
       .get("/api/books")
       .expect(200);
-    console.log("BODY::::::::", response.body);
+
+    console.log("Response body:", response.body);
     expect(response.body).toHaveProperty("message", "Hola");
   });
 });
