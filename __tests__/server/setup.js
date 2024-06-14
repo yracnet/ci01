@@ -52,5 +52,12 @@ export default function setup() {
     child.stderr.on("data", (data) => {
       console.error("[SERVER ERROR]", data.toString());
     });
+    child.on("exit", (code, signal) => {
+      console.log(
+        `[START] Server process exited with code ${code} and signal ${signal}.`
+      );
+      console.log(`[START] Save Logs.`);
+      logFile.end();
+    });
   });
 }
