@@ -1,0 +1,49 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build Application
+        run: yarn dev
+
+      - name: Run Tests
+        run: yarn run test
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: __tests__/coverage
+
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-logs
+          path: __tests__/logs
+
+      - name: Cleanup Artifacts
+        run: rm -rf __tests__/coverage __tests__/logs
+
+      - name: Finalize Job
+        run: echo "Pipeline completed successfully"
