@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { pluginAPIRoutes } from "vite-plugin-api-routes";
+import pluginReact from "@vitejs/plugin-react-swc";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,6 +9,7 @@ export default defineConfig({
     outDir: "dist/public",
   },
   plugins: [
+    pluginReact(),
     pluginAPIRoutes({
       routeBase: "api",
       dirs: [
