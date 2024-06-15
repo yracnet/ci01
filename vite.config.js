@@ -18,7 +18,7 @@ export default defineConfig({
           route: "books",
         },
       ],
-      outDir: "dist",
+      outDir: "dist/server",
     }),
   ],
 });
