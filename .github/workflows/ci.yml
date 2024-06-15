@@ -9,8 +9,17 @@ on:
       - main
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  # Build 00 de Pruebas
+  build-00:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Run Docker PS
+        run: docker ps
+
+  # Build 01 de Despliegue
+  build-01:
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Repository

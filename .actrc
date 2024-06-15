@@ -1,2 +1,3 @@
 # .actrc
--P ubuntu-latest=node:20-buster-slim
+#-P ubuntu-22.04=node:20-buster-slim
+-P ubuntu-22.04=-self-hosted # Para que reconozca Docker como comando
