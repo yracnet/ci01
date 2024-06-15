@@ -24,23 +24,23 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
+      - name: Run Build
+        run: yarn build
+
       - name: Run Tests
         run: yarn run test
 
-      - name: Archive Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: __tests__/coverage
+      - name: Build Docker Image
+        run: docker build -t my-app:latest .
 
-      - name: Publish Test Results
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-logs
-          path: __tests__/logs
+      - name: Run Docker Container
+        run: docker run -d -p 3000:3000 --name my-app-container my-app:latest
 
-      - name: Cleanup Artifacts
-        run: rm -rf __tests__/coverage __tests__/logs
+      # - name: Archive Artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: test-results
+      #     path: __tests__/coverage
 
       - name: Finalize Job
         run: echo "Pipeline completed successfully"
