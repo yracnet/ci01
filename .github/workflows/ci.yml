@@ -42,8 +42,17 @@ jobs:
       - name: Build Docker Image
         run: docker build -t my-app:latest .
 
-      - name: Run Docker Container
-        run: docker run -d -p 3000:3000 --name my-app-container my-app:latest
+      # - name: Run Docker Container
+      #   run: docker run -d -p 3000:3000 --name my-app-container my-app:latest
+
+      - name: Upload File
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: us-east-1.sftpcloud.io
+          username: 9122c0e7880e427fa2fb582c96358759
+          password: V18eYHWakQtypWhI8ZBFDaRGHW85664R
+          local-dir: ./dist/
+          server-dir: ./build/my-app/
 
       # - name: Archive Artifacts
       #   uses: actions/upload-artifact@v2
