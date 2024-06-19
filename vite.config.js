@@ -8,6 +8,9 @@ export default defineConfig({
     minify: false,
     outDir: "dist/public",
   },
+  define: {
+    "process.env.BUILD_TIME": JSON.stringify(new Date().toLocaleString()),
+  },
   plugins: [
     pluginReact(),
     pluginAPIRoutes({

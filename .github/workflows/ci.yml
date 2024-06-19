@@ -16,6 +16,7 @@ jobs:
       DOCKERHUB_USER: yracnet
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       IMAGE_URL: "yracnet/ci01:${{ github.run_number }}"
+      IMAGE_URL_LATEST: "yracnet/ci01:latest"
       IMAGE_PLATFORM: "linux/amd64,linux/arm64"
       DEPLOY_ID: ci01
       DEPLOY_KEY: ${{ secrets.RENDER_API_KEY }}
@@ -69,7 +70,7 @@ jobs:
           password: ${{ env.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Docker Image
-        run: docker buildx build --platform ${{ env.IMAGE_PLATFORM }} -t ${{ env.IMAGE_URL }} --push .
+        run: docker buildx build --platform ${{ env.IMAGE_PLATFORM }} -t ${{ env.IMAGE_URL }} -t ${{ env.IMAGE_URL_LATEST }} --push .
 
       - name: Deploy to Render
         run: |
@@ -78,7 +79,7 @@ jobs:
           --header "accept: application/json" \
           --header "authorization: Bearer ${{ env.DEPLOY_KEY }}" \
           --header "content-type: application/json" \
-          --data "{ \"imageUrl\": \"docker.io/${{ env.IMAGE_URL }}\" }"
+          --data "{ \"imageUrl\": \"docker.io/${{ env.IMAGE_URL_LATEST }}\" }"
 
       - name: Finalize Job
         run: echo "Pipeline completed successfully"
