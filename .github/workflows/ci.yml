@@ -71,9 +71,6 @@ jobs:
       - name: Build and Push Docker Image
         run: docker buildx build --platform ${{ env.IMAGE_PLATFORM }} -t ${{ env.IMAGE_URL }} --push .
 
-      - name: List Docker Images
-        run: docker images
-
       - name: Deploy to Render
         run: |
           curl --request POST \
@@ -81,12 +78,7 @@ jobs:
           --header "accept: application/json" \
           --header "authorization: Bearer ${{ env.DEPLOY_KEY }}" \
           --header "content-type: application/json" \
-          --data @- <<EOF
-          {
-            "clearCache": true,
-            "imageUrl": "docker.io/${{ env.IMAGE_URL }}"
-          }
-          EOF
+          --data "{ \"imageUrl\": \"docker.io/${{ env.IMAGE_URL }}\" }"
 
       - name: Finalize Job
         run: echo "Pipeline completed successfully"
