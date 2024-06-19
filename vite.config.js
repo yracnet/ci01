@@ -6,7 +6,12 @@ const htmlPlugin = () => {
   return {
     name: "html-transform",
     transformIndexHtml(html) {
-      return html.replace("__BUILD_TIME__", new Date().toISOString());
+      ["RUN_NUMBER", "BRANCH_NAME", "COMMIT_ID", "BUILD_DATE"].forEach(
+        (key) => {
+          html = html.replace(`__${key}__`, process.env[key]);
+        }
+      );
+      return html;
     },
   };
 };
