@@ -63,7 +63,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
-        run: docker buildx build --platform ${{ env.IMAGE_PLATFORM }} -t ${{ env.IMAGE_URL }} .
+        run: docker buildx build --platform ${{ env.IMAGE_PLATFORM }} -t ${{ env.IMAGE_URL }} --push .
 
       - name: List Docker Images
         run: docker images
