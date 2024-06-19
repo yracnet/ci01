@@ -19,6 +19,13 @@ jobs:
       DOCKER_IMAGE_TAG_RUN_NUMBER: "${DOCKER_IMAGE_URL}:${{ github.run_number }}"
 
     steps:
+      - name: Print Environment Variables
+        run: |
+          echo "DOCKER_IMAGE_PLATFORM=${DOCKER_IMAGE_PLATFORM}"
+          echo "DOCKER_IMAGE_URL=${DOCKER_IMAGE_URL}"
+          echo "DOCKER_IMAGE_TAG_LATEST=${DOCKER_IMAGE_TAG_LATEST}"
+          echo "DOCKER_IMAGE_TAG_RUN_NUMBER=${DOCKER_IMAGE_TAG_RUN_NUMBER}"
+
       - name: Checkout Repository
         uses: actions/checkout@v3
 
