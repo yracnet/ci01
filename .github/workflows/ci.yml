@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      DOCKER_PLATFORM: "linux/amd64,linux/arm64"
       DOCKERHUB_USER: yracnet
-      IMAGE_URL: "yracnet/ci01:${{github.run_number}}"
-      SERVICE_ID: ci01
-      RENDER_API_KEY: ${{secrets.RENDER_API_KEY}}
-      DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      IMAGE_URL: "yracnet/ci01:${{ github.run_number }}"
+      IMAGE_PLATFORM: "linux/amd64,linux/arm64"
+      DEPLOY_ID: ci01
+      DEPLOY_KEY: ${{ secrets.RENDER_API_KEY }}
 
     steps:
       - name: Checkout Repository
@@ -63,7 +63,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
-        run: docker buildx build --platform ${{env.DOCKER_PLATFORM}} -t ${{env.IMAGE_URL}} .
+        run: docker buildx build --platform ${{ env.IMAGE_PLATFORM }} -t ${{ env.IMAGE_URL }} .
 
       - name: List Docker Images
         run: docker images
@@ -76,19 +76,19 @@ jobs:
 
       - name: Publish Docker Image
         run: |
-          docker push ${{env.IMAGE_URL}}
+          docker push ${{ env.IMAGE_URL }}
 
       - name: Deploy to Render
         run: |
           curl --request POST \
-          --url https://api.render.com/v1/services/${{env.SERVICE_ID}}/deploys \
+          --url https://api.render.com/v1/services/${{ env.DEPLOY_ID }}/deploys \
           --header "accept: application/json" \
-          --header "authorization: Bearer ${{env.RENDER_API_KEY}}" \
+          --header "authorization: Bearer ${{ env.DEPLOY_KEY }}" \
           --header "content-type: application/json" \
           --data @- <<EOF
           {
             "clearCache": true,
-            "imageUrl": "docker.io/${{env.IMAGE_URL}}"
+            "imageUrl": "docker.io/${{ env.IMAGE_URL }}"
           }
           EOF
 
