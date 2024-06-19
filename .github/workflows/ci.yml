@@ -14,7 +14,7 @@ jobs:
 
     env:
       DOCKER_IMAGE_PLATFORM: "linux/amd64,linux/arm64"
-      DOCKER_IMAGE_URL: "${{ env.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}"
+      DOCKER_IMAGE_URL: "${DOCKERHUB_USER}/${IMAGE_NAME}"
       DOCKER_IMAGE_TAG_LATEST: "${DOCKER_IMAGE_URL}:latest"
       DOCKER_IMAGE_TAG_RUN_NUMBER: "${DOCKER_IMAGE_URL}:${{ github.run_number }}"
 
