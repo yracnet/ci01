@@ -42,10 +42,6 @@ jobs:
           name: build
           path: dist
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    steps:
       # - name: Upload File
       #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       #   with:
@@ -55,19 +51,50 @@ jobs:
       #     local-dir: ./dist/
       #     server-dir: ./build/
 
-      - name: Install Render CLI
-        run: |
-          curl -fsSL https://render.com/install | bash
-
-      - name: Login to Render
-        run: |
-          echo rnd_uqR0LVeqtlYwwiUy44fl8MoLdvhZ | render login --api-key -
-
       - name: Build Docker Image
         run: docker build -t my-app:latest .
 
+      - name: Save Docker image as tar
+        run: docker save my-app:latest -o my-app.tar
+
       - name: Deploy to Render
-        run: render deploy --service ci01 --image my-app:latest
+        env:
+          RENDER_API_KEY: rnd_uqR0LVeqtlYwwiUy44fl8MoLdvhZ
+        run: |
+          # Create a deployment using the Render API
+          SERVICE_ID="ci01"
+          tarball="my-app.tar"
+          version="latest"
+
+          # Install Tools
+          sudo apt-get install -y jq
+          # Upload the tarball to Render
+          upload_response=$(curl -s -X POST "https://api.render.com/v1/services/$SERVICE_ID/deploys" \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "version": "'"$version"'"
+            }')
+
+          upload_url=$(echo $upload_response | jq -r '.uploadUrl')
+
+          curl -s -X PUT "$upload_url" \
+            -H "Content-Type: application/x-tar" \
+            --data-binary @"$tarball"
+
+      # - name: Install Render CLI
+      #   run: |
+      #     curl -fsSL https://render.com/install | bash
+
+      # - name: Login to Render
+      #   run: |
+      #     echo rnd_uqR0LVeqtlYwwiUy44fl8MoLdvhZ | render login --api-key -
+
+      # - name: Build Docker Image
+      #   run: docker build -t my-app:latest .
+
+      # - name: Deploy to Render
+      #   run: render deploy --service ci01 --image my-app:latest
 
       - name: Finalize Job
         run: echo "Pipeline completed successfully"
