@@ -79,7 +79,7 @@ jobs:
           --header "accept: application/json" \
           --header "authorization: Bearer ${{ env.DEPLOY_KEY }}" \
           --header "content-type: application/json" \
-          --data "{ \"imageUrl\": \"docker.io/${{ env.IMAGE_URL_LATEST }}\" }"
+          --data "{ \"imageUrl\": \"docker.io/${{ env.IMAGE_URL }}\" }"
 
       - name: Finalize Job
         run: echo "Pipeline completed successfully"
